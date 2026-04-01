@@ -7,7 +7,7 @@
   <title>@yield('title', 'Lista de la compra')</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100 min-h-screen font-mono">
   @yield('content')
 </body>
 </html>

@@ -20,7 +20,7 @@
     <input
         type="text"
         name="lista"
-        placeholder="Nombre del producto..."
+        placeholder="Nombre del producto"
         value="{{ old('lista') }}"
     >
 
@@ -28,7 +28,7 @@
     {{-- $supermercados es la colección pluck() que viene del controlador.
          @foreach la recorre pasando $id como clave y $nombre como valor. --}}
     <select name="supermercado_id">
-        <option value="">-- Selecciona un supermercado --</option>
+        <option value="">Supermercado</option>
 
         @foreach($supermercados as $id => $nombre)
             {{-- old('supermercado_id') restaura la selección si falla la validación --}}
@@ -38,6 +38,34 @@
         @endforeach
     </select>
 
-    <button type="submit">Añadir producto</button>
+    <button type="submit" class="rounded-md px-3 py-1.5 font-medium bg-green-500 hover:bg-sky-700">AÑADIR</button>
 </form>
+
+{{--Aqui empieza el invento--}}
+@forelse ($listas as $lista)
+<div class="bg-white rounded-xl shadow p-4 mb-3 flex items-center justify-between gap-3">
+
+    {{-- Nombre del producto y supermercado --}}
+    <div>
+        <span class="font-medium text-gray-800">{{ $lista->lista }}</span>
+        <span class="text-sm text-gray-400 ml-2">{{ $lista->supermercado->nombre ?? 'Sin supermercado' }}</span>
+    </div>
+
+    {{-- FORMULARIO ELIMINAR --}}
+    <form
+        action="{{ route('listas.destroy', $lista->id) }}"  {{-- ← corregido: listas en plural --}}
+        method="POST"
+        onsubmit="return confirm('¿Seguro que quieres eliminar este producto?')"
+    >
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="text-red-400 hover:text-red-600 font-medium text-sm">
+            Eliminar
+        </button>
+    </form>
+
+</div>
+@empty
+    <p class="text-center text-gray-400 py-10">No tienes productos todavía. ¡Añade el primero!</p>
+@endforelse
 </div>

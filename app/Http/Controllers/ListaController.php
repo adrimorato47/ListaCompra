@@ -13,6 +13,8 @@ class ListaController extends Controller
      */
     public function index()
     {
+        // Si esto devuelve una colección vacía, la vista mostrará
+        // el mensaje del @empty aunque hayas añadido productos.
         $listas = Lista::latest()->get();
         $supermercados = Supermercado::pluck('nombre', 'id');
 
@@ -23,21 +25,19 @@ class ListaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+   public function store(Request $request)
     {
         $request->validate([
-            'producto' => 'required|string|max:255',
-            'comprado' => 'required|boolean',
+            'lista'           => 'required|string|max:255',
             'supermercado_id' => 'required|exists:supermercados,id',
         ]);
 
         Lista::create([
-            'producto' => $request->producto,
-            'comprado' => $request->comprado,
+            'lista'           => $request->lista,
             'supermercado_id' => $request->supermercado_id,
         ]);
 
-        return redirect()->route('listas.index')->with('success', 'Producto agregado.');
+        return redirect()->back()->with('success', '¡Producto añadido!');
     }
 
     /**
@@ -49,7 +49,7 @@ class ListaController extends Controller
             'producto' => 'required|string|max:255',
             'comprado' => 'required|boolean',
         ]);
-        
+
         $listas = Lista::findOrFail($id);
         $listas->update([
             'producto' => $request->producto,
