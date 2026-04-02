@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('supermercados', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->string('imagen');
+            $table->string('imagen')->nullable();
             $table->timestamps();
         });
     }

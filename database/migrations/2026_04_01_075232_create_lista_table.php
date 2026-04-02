@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('listas', function (Blueprint $table) {
             $table->id();
             $table->string('producto');
-            $table->boolean('comprado');
+            $table->boolean('comprado')->default(false)->nullable();
             $table->foreignId('supermercado_id')->constrained('supermercados')->onDelete('cascade');
             $table->timestamps();
         });

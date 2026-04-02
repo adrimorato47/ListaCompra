@@ -28,12 +28,12 @@ class ListaController extends Controller
    public function store(Request $request)
     {
         $request->validate([
-            'lista'           => 'required|string|max:255',
+            'producto'        => 'required|string|max:255', // ← cambiado a 'producto'
             'supermercado_id' => 'required|exists:supermercados,id',
         ]);
 
         Lista::create([
-            'lista'           => $request->lista,
+            'producto'        => $request->producto, // ← cambiado a 'producto'
             'supermercado_id' => $request->supermercado_id,
         ]);
 

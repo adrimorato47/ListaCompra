@@ -1,14 +1,14 @@
 <?php
 
 use App\Http\Controllers\ListaController;
-use App\Http\Controllers\SupermercadosController;
+use App\Http\Controllers\SupermercadoController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::resource('listas', ListaController::class)
-    ->only(['index', 'store', 'update', 'destroy', 'destroyAll']);
+    ->only(['index', 'store', 'update', 'destroy']);
 
-Route::resource('supermercados', SupermercadosController::class)
+Route::resource('supermercados', SupermercadoController::class)
     ->only(['index', 'store', 'update', 'destroy']);
 
 Route::get('/', function () {

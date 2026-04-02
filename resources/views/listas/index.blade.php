@@ -19,7 +19,7 @@
     {{-- CAMPO NOMBRE DEL PRODUCTO --}}
     <input
         type="text"
-        name="lista"
+        name="producto"
         placeholder="Nombre del producto"
         value="{{ old('lista') }}"
     >
@@ -28,7 +28,7 @@
     {{-- $supermercados es la colección pluck() que viene del controlador.
          @foreach la recorre pasando $id como clave y $nombre como valor. --}}
     <select name="supermercado_id">
-        <option value="">Supermercado</option>
+        <option value="">Cualquiera</option>
 
         @foreach($supermercados as $id => $nombre)
             {{-- old('supermercado_id') restaura la selección si falla la validación --}}
@@ -47,19 +47,28 @@
 
     {{-- Nombre del producto y supermercado --}}
     <div>
-        <span class="font-medium text-gray-800">{{ $lista->lista }}</span>
-        <span class="text-sm text-gray-400 ml-2">{{ $lista->supermercado->nombre ?? 'Sin supermercado' }}</span>
+        <span class="font-medium text-gray-800">{{ $lista->producto }}</span>
+
+        @if($lista->supermercado)
+            <img
+                src="{{ asset('storage/' . $lista->supermercado->imagen) }}"
+                alt="{{ $lista->supermercado->nombre }}"
+                class="w-16 h-16 object-cover rounded"
+            >
+        @else
+            <span class="text-sm text-gray-400 ml-2">Sin supermercado</span>
+        @endif
     </div>
 
     {{-- FORMULARIO ELIMINAR --}}
     <form
-        action="{{ route('listas.destroy', $lista->id) }}"  {{-- ← corregido: listas en plural --}}
+        action="{{ route('listas.destroy', $lista->id) }}"
         method="POST"
         onsubmit="return confirm('¿Seguro que quieres eliminar este producto?')"
     >
         @csrf
         @method('DELETE')
-        <button type="submit" class="text-red-400 hover:text-red-600 font-medium text-sm">
+        <button type="submit" class="rounded-md px-3 py-1.5 font-medium bg-red-600 hover:bg-sky-700">
             Eliminar
         </button>
     </form>

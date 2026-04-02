@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Supermercado;
 
 use Illuminate\Http\Request;
 
@@ -23,12 +24,16 @@ class SupermercadoController extends Controller
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'imagen' => 'required|string|max:255',
+            'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+        $rutaImagen = null;
+        if ($request->hasFile('imagen')) {
+            $rutaImagen = $request->file('imagen')->store('supermercados', 'public');
+        }
 
         Supermercado::create([
             'nombre' => $request->nombre,
-            'imagen' => $request->imagen,
+            'imagen' => $rutaImagen, // será null si no se subió imagen
         ]);
 
         return redirect()->route('supermercados.index')->with('success', 'Supermercado agregado.');
@@ -59,7 +64,7 @@ class SupermercadoController extends Controller
      */
     public function destroy(string $id)
     {
-        $supermercados = Supermercados::findOrFail($id);
+        $supermercados = Supermercado::findOrFail($id);
         $supermercados->delete();
 
         return redirect()->route('supermercados.index')->with('success', 'Supermercado eliminado.');
