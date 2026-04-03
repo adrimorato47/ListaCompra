@@ -42,39 +42,59 @@
 </form>
 
 {{--Aqui empieza el invento--}}
-@forelse ($listas as $lista)
-<div class="bg-white rounded-xl shadow p-4 mb-3 flex items-center justify-between gap-3">
-
-    {{-- Nombre del producto y supermercado --}}
-    <div>
-        <span class="font-medium text-gray-800">{{ $lista->producto }}</span>
-
-        @if($lista->supermercado)
-            <img
-                src="{{ asset('storage/' . $lista->supermercado->imagen) }}"
-                alt="{{ $lista->supermercado->nombre }}"
-                class="w-16 h-16 object-cover rounded"
+<table class="w-full">
+    @forelse ($listas as $lista)
+    <tbody>
+        <tr class="bg-white rounded-xl shadow p-4 mb-3 flex items-center justify-between gap-3 p-12">
+            <td class="w-2/4 text-2xl">
+            {{-- Nombre del producto y supermercado --}}
+            <div>
+                <span class="font-medium text-gray-800">{{ $lista->producto }}</span>
+            </td>
+            <td class="w-1/4">
+                @if($lista->supermercado)
+                    <img
+                        src="{{ asset('storage/' . $lista->supermercado->imagen) }}"
+                        alt="{{ $lista->supermercado->nombre }}"
+                        class="w-16 h-16 object-cover rounded"
+                    >
+                @else
+                    <span class="text-sm text-gray-400 ml-2">Sin supermercado</span>
+                @endif
+            </div>
+            </td>
+            {{-- FORMULARIO ELIMINAR --}}
+            <form
+                action="{{ route('listas.destroy', $lista->id) }}"
+                method="POST"
+                onsubmit="return confirm('¿Está ya en la cesta?')"
             >
-        @else
-            <span class="text-sm text-gray-400 ml-2">Sin supermercado</span>
-        @endif
-    </div>
+            <td class="w-1/4">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="rounded-md px-3 py-1.5 font-medium bg-red-600 hover:bg-sky-700">
+                    Eliminar
+                </button>
+            </form>
+            </td>
+        </tr>
+    </tblody>
+    @empty
+        <p class="text-center text-gray-400 py-10">No tienes productos todavía. ¡Añade el primero!</p>
+    @endforelse
+</table>
+<form action="{{route('listas.destroyAll')}}"
+    method="POST"
+    onsubmit="return confirm('¿Seguro que quieres eliminarlo todo?')"
+>
+@csrf
+@method('DELETE')
+<button type="submit"
+{{--class="rouded-md px-3 py-1.5 font-medium bg-olive-950 text-white hover:bg-olive-50 hover:text-olive-950">--}}
+ class="rounded-md px-3 py-1.5 font-medium bg-stone-800 text-white hover:bg-red-700">
+    Vaciar lista
+</button>
 
-    {{-- FORMULARIO ELIMINAR --}}
-    <form
-        action="{{ route('listas.destroy', $lista->id) }}"
-        method="POST"
-        onsubmit="return confirm('¿Seguro que quieres eliminar este producto?')"
-    >
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="rounded-md px-3 py-1.5 font-medium bg-red-600 hover:bg-sky-700">
-            Eliminar
-        </button>
-    </form>
-
-</div>
-@empty
-    <p class="text-center text-gray-400 py-10">No tienes productos todavía. ¡Añade el primero!</p>
-@endforelse
+</button>
+</form>
 </div>
