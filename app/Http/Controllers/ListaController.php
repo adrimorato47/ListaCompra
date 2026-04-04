@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Lista;
 use App\Models\Supermercado;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 
@@ -11,14 +12,19 @@ class ListaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Si esto devuelve una colección vacía, la vista mostrará
-        // el mensaje del @empty aunque hayas añadido productos.
-        $listas = Lista::latest()->get();
+        $orden = $request->get('supermercado_id');
+
+        $listas = Lista::when($orden, function ($query) use ($orden) {
+                return $query->orderByRaw("supermercado_id = ? DESC", [$orden]);
+            })
+            ->orderBy('supermercado_id')
+            ->get();
+
         $supermercados = Supermercado::pluck('nombre', 'id');
 
-        return view('listas.index', compact('listas', 'supermercados'));
+        return view('listas.index', compact('listas', 'supermercados', 'orden'));
     }
 
 

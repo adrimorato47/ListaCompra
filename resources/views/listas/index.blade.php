@@ -28,7 +28,7 @@
     {{-- $supermercados es la colección pluck() que viene del controlador.
          @foreach la recorre pasando $id como clave y $nombre como valor. --}}
     <select name="supermercado_id">
-        <option value="">Cualquiera</option>
+        <option value="">-</option>
 
         @foreach($supermercados as $id => $nombre)
             {{-- old('supermercado_id') restaura la selección si falla la validación --}}
@@ -42,6 +42,16 @@
 </form>
 
 {{--Aqui empieza el invento--}}
+<form method="GET" action="{{ route('listas.index') }}">
+    <select name="supermercado_id" onchange="this.form.submit()">
+        <option value="">Cualquier orden</option>
+        @foreach ($supermercados as $id => $nombre)
+            <option value="{{ $id }}" {{ $orden == $id ? 'selected' : '' }}>
+                {{ $nombre }}
+            </option>
+        @endforeach
+    </select>
+</form>
 <table class="w-full">
     @forelse ($listas as $lista)
     <tbody>
