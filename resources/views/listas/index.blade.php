@@ -12,34 +12,35 @@
             {{ session('success') }}
         </div>
     @endif
-
+    @auth
     <form action="{{ route('listas.store') }}" method="POST">
-    @csrf
+        @csrf
 
-    {{-- CAMPO NOMBRE DEL PRODUCTO --}}
-    <input
-        type="text"
-        name="producto"
-        placeholder="Nombre del producto"
-        value="{{ old('lista') }}"
-    >
+        {{-- CAMPO NOMBRE DEL PRODUCTO --}}
+        <input
+            type="text"
+            name="producto"
+            placeholder="Nombre del producto"
+            value="{{ old('lista') }}"
+        >
 
-    {{-- DESPLEGABLE DE SUPERMERCADOS --}}
-    {{-- $supermercados es la colección pluck() que viene del controlador.
-         @foreach la recorre pasando $id como clave y $nombre como valor. --}}
-    <select name="supermercado_id">
-        <option value="">-</option>
+        {{-- DESPLEGABLE DE SUPERMERCADOS --}}
+        {{-- $supermercados es la colección pluck() que viene del controlador.
+            @foreach la recorre pasando $id como clave y $nombre como valor. --}}
+        <select name="supermercado_id">
+            <option value="">-</option>
 
-        @foreach($supermercados as $id => $nombre)
-            {{-- old('supermercado_id') restaura la selección si falla la validación --}}
-            <option value="{{ $id }}" {{ old('supermercado_id') == $id ? 'selected' : '' }}>
-                {{ $nombre }}
-            </option>
-        @endforeach
-    </select>
+            @foreach($supermercados as $id => $nombre)
+                {{-- old('supermercado_id') restaura la selección si falla la validación --}}
+                <option value="{{ $id }}" {{ old('supermercado_id') == $id ? 'selected' : '' }}>
+                    {{ $nombre }}
+                </option>
+            @endforeach
+        </select>
 
-    <button type="submit" class="rounded-md px-3 py-1.5 font-medium bg-green-500 hover:bg-sky-700">AÑADIR</button>
-</form>
+        <button type="submit" class="rounded-md px-3 py-1.5 font-medium bg-green-500 hover:bg-sky-700">AÑADIR</button>
+    </form>
+@endauth
 
 {{--Aqui empieza el invento--}}
 <form method="GET" action="{{ route('listas.index') }}">
@@ -74,37 +75,40 @@
             </div>
             </td>
             {{-- FORMULARIO ELIMINAR --}}
-            <form
-                action="{{ route('listas.destroy', $lista->id) }}"
-                method="POST"
-                onsubmit="return confirm('¿Está ya en la cesta?')"
-            >
-            <td class="w-1/4">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="rounded-md px-3 py-1.5 font-medium bg-red-600 hover:bg-sky-700">
-                    Eliminar
-                </button>
-            </form>
-            </td>
+            @auth
+                <form
+                    action="{{ route('listas.destroy', $lista->id) }}"
+                    method="POST"
+                    onsubmit="return confirm('¿Está ya en la cesta?')"
+                >
+                <td class="w-1/4">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="rounded-md px-3 py-1.5 font-medium bg-red-600 hover:bg-sky-700">
+                        Eliminar
+                    </button>
+                </form>
+                </td>
+            @endauth
         </tr>
     </tblody>
     @empty
         <p class="text-center text-gray-400 py-10">No tienes productos todavía. ¡Añade el primero!</p>
     @endforelse
 </table>
-<form action="{{route('listas.destroyAll')}}"
-    method="POST"
-    onsubmit="return confirm('¿Seguro que quieres eliminarlo todo?')"
->
-@csrf
-@method('DELETE')
-<button type="submit"
-{{--class="rouded-md px-3 py-1.5 font-medium bg-olive-950 text-white hover:bg-olive-50 hover:text-olive-950">--}}
- class="rounded-md px-3 py-1.5 font-medium bg-stone-800 text-white hover:bg-red-700">
-    Vaciar lista
-</button>
-
+@auth
+    <form action="{{route('listas.destroyAll')}}"
+        method="POST"
+        onsubmit="return confirm('¿Seguro que quieres eliminarlo todo?')"
+    >
+    @csrf
+    @method('DELETE')
+    <button type="submit"
+    {{--class="rouded-md px-3 py-1.5 font-medium bg-olive-950 text-white hover:bg-olive-50 hover:text-olive-950">--}}
+    class="rounded-md px-3 py-1.5 font-medium bg-stone-800 text-white hover:bg-red-700">
+        Vaciar lista
+    </button>
+@endauth
 </button>
 </form>
 </div>
