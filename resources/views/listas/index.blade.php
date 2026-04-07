@@ -3,7 +3,6 @@
 @section('title', 'Listas')
 
 @section('content')
-
 <div class="max-w-2xl mx-auto py-10 px-4">
   <h1 class="text-2xl font-bold mb-4">Listas de la compra</h1>
   <!-- Contenido de la vista -->
